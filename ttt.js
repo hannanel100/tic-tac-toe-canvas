@@ -24,7 +24,7 @@ o.addEventListener("click", function () {
 let results = [];
 
 function add() {
-    if (results[position.value] === '') {
+    
         console.log(results);
         if (isX === true) {
             results[position.value] = 'X';
@@ -37,9 +37,9 @@ function add() {
             console.log(results);
             isX = true;
         }
+        checkWinner(results);
     }
-    checkWinner(results);
-}
+    
 
 function writeX() {
     if (position.value == 0 || position.value == 3 || position.value == 6) {
