@@ -1,89 +1,66 @@
 var c = document.getElementById("myCanvas");
 var ctx = c.getContext("2d");
-//ctx.beginPath();
-ctx.moveTo(300, 0);
-ctx.lineTo(300, 900);
-ctx.moveTo(600, 0);
-ctx.lineTo(600, 900);
-ctx.moveTo(0, 300);
-ctx.lineTo(900, 300);
-ctx.moveTo(0, 600);
-ctx.lineTo(900, 600);
-ctx.stroke();
+
+let boardSize = 600;
+let boxSize = boardSize / 3;
+(function drawBoard() {
+    for (let x = 1; x < 3; x++) {
+        ctx.moveTo(0, boxSize * x);
+        ctx.lineTo(boardSize, boxSize * x);
+    }
+    for (let y = 1; y < 3; y++) {
+        ctx.moveTo(boxSize * y, 0);
+        ctx.lineTo(boxSize * y, boardSize);
+    }
+    ctx.stroke();
+}());
+
 var isX = true;
-let position = document.getElementById("position");
+
 let x = document.getElementById("x");
 let o = document.getElementById("o");
 x.addEventListener("click", function () {
-    add();
+    add(Number(document.getElementById("position").value))
 });
 o.addEventListener("click", function () {
     isX = false;
-    add();
+    add(Number(document.getElementById("position").value))
 });
 let results = [];
 
-function add() {
-    
-        console.log(results);
-        if (isX === true) {
-            results[position.value] = 'X';
-            writeX();
-            console.log(results);
-        }
-        else {
-            results[position.value] = 'O';
-            writeO();
-            console.log(results);
-            isX = true;
-        }
-        checkWinner(results);
-    }
-    
+function add(boxNum) {
 
-function writeX() {
-    if (position.value == 0 || position.value == 3 || position.value == 6) {
-        ctx.moveTo(100, 100 + (position.value * 100));
-        ctx.lineTo(200, 200 + (position.value * 100));
-        ctx.moveTo(200, 100 + (position.value * 100));
-        ctx.lineTo(100, 200 + (position.value * 100));
-        ctx.stroke();
+    console.log(boxNum);
+    if (isX === true) {
+        results[boxNum] = 'X';
+        writeX(boxNum);
     }
-    else if (position.value == 1 || position.value == 4 || position.value == 7) {
-        ctx.moveTo(400, (position.value * 100));
-        ctx.lineTo(500, 100 + (position.value * 100));
-        ctx.moveTo(500, (position.value * 100));
-        ctx.lineTo(400, 100 + (position.value * 100));
-        ctx.stroke();
+    else {
+        results[boxNum] = 'O';
+        writeO(boxNum);
+        isX = true;
     }
-    else if (position.value == 2 || position.value == 5 || position.value == 8) {
-        ctx.moveTo(700, (position.value * 100) - 100);
-        ctx.lineTo(800, (position.value * 100));
-        ctx.moveTo(800, (position.value * 100) - 100);
-        ctx.lineTo(700, (position.value * 100));
-        ctx.stroke();
-    }
-
-
+    checkWinner(results);
 }
 
-function writeO() {
-    if (position.value == 0 || position.value == 3 || position.value == 6) {
-        ctx.beginPath();
-        ctx.arc(150, 150 + (position.value * 100), 50, 0, 2 * Math.PI);
-        ctx.stroke();
-    }
-    else if (position.value == 1 || position.value == 4 || position.value == 7) {
-        ctx.beginPath();
-        ctx.arc(450, 50 + (position.value * 100), 50, 0, 2 * Math.PI);
-        ctx.stroke();
-    }
-    else if (position.value == 2 || position.value == 5 || position.value == 8) {
-        ctx.beginPath();
-        ctx.arc(750, (position.value * 100) - 50, 50, 0, 2 * Math.PI);
-        ctx.stroke();
-    }
 
+function writeX(boxNum) {
+    var offset = 25;
+    var xCordinate = boxNum % 3 * boxSize;
+    var yCordinate = Math.floor(boxNum / 3) * boxSize;  
+    ctx.moveTo(xCordinate, yCordinate);
+    ctx.lineTo(xCordinate + boardSize / 3, yCordinate + boardSize / 3);
+    ctx.moveTo(xCordinate, yCordinate + boardSize / 3);
+    ctx.lineTo(xCordinate + boardSize / 3, yCordinate);
+    ctx.stroke();
+}
+
+function writeO(boxNum) {
+    var xCordinate = 100+boxNum % 3 * boxSize;
+    var yCordinate = 100+Math.floor(boxNum / 3) * boxSize;
+    ctx.beginPath();
+    ctx.arc(xCordinate,yCordinate,50,0,2 * Math.PI);
+    ctx.stroke();
 }
 
 function checkWinner(arr) {
